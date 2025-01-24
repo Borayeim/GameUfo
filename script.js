@@ -17,12 +17,11 @@ const bullet = {
   y: player.y,
   width: 5,
   height: 15,
-  speed: 20,
+  speed: 30,
   active: false,
   image: new Image(),
 };
 bullet.image.src = 'bullet.png';
-speed: 9
 // Enemies
 const enemies = [];
 const numEnemies = 3;
