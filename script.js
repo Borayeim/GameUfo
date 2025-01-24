@@ -22,10 +22,10 @@ const bullet = {
   image: new Image(),
 };
 bullet.image.src = 'bullet.png';
-
+speed: 2 + Math.random() * 2,
 // Enemies
 const enemies = [];
-const numEnemies = 1;
+const numEnemies = 5;
 
 for (let i = 0; i < numEnemies; i++) {
   enemies.push({
