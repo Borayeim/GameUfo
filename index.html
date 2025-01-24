@@ -11,13 +11,18 @@
       display: block;
       margin: 0 auto;
       background: url('background.png') no-repeat center center;
-      background-size: cover;
     }
     body {
       text-align: center;
       font-family: Arial, sans-serif;
       background: #000;
       color: #fff;
+      display: flex;
+      flex-direction: column;
+      max-width: 1440px;
+      margin:0 auto;
+      height: 100vh;
+      height: -webkit-fill-available;
     }
     .controls {
       position: fixed;
@@ -39,12 +44,12 @@
     }
     #shootButton:hover {
       background-color: #bf1313;
-      box-shadow:0 0 25px #481637;
+      box-shadow:0 0 50px #8a8789;
     }
     #leftButton:hover,
     #rightButton:hover {
       background-color: #bf1313;
-      box-shadow:0 0 25px #481637;
+      box-shadow:0 0 50px #a59fa3;
     }
     .fa {
       font-size: 30px;
