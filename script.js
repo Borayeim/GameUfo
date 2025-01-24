@@ -179,3 +179,21 @@ function gameLoop() {
 }
 
 gameLoop();
+if (autoShootTimer >= autoShootInterval && !bullet.active) {
+  console.log("Bullet fired!"); // Debugging log
+  bullet.x = player.x + player.width / 2 - bullet.width / 2;
+  bullet.y = player.y;
+  bullet.active = true;
+  autoShootTimer = 0; // Reset the timer
+}
+
+// Check bullet activity
+if (bullet.active) {
+  console.log(`Bullet position: x=${bullet.x}, y=${bullet.y}`); // Debugging log
+  bullet.y -= bullet.speed;
+  if (bullet.y < 0) {
+    bullet.active = false;
+    console.log("Bullet reset!"); // Debugging log
+  }
+}
+
