@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="shortcut icon" type="x-icon" href="ufo.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <title>UFO 2D Game</title>
   <style>
     canvas {
@@ -29,19 +30,44 @@
     .controls button {
       padding: 10px 20px;
       font-size: 20px;
-      background-color: #444;
+      background-color: #000000;
       color: white;
       border: none;
       border-radius: 5px;
+      box-shadow:0 0 50px #d7d9dc;
+
+    }
+    #shootButton:hover {
+      background-color: #bf1313;
+      box-shadow:0 0 25px #481637;
+    }
+    #leftButton:hover,
+    #rightButton:hover {
+      background-color: #bf1313;
+      box-shadow:0 0 25px #481637;
+    }
+    .fa {
+      font-size: 30px;
+      margin: 0 20px;
+    }
+    .fa-solid {
+      font-size: 30px;
+      margin-right: 1px;
+      width: 30px;
+      height: 30px;
+      padding: 10px;
     }
   </style>
 </head>
 <body>
   <canvas id="gameCanvas" width="800" height="600"></canvas>
   <div class="controls">
-    <button id="leftButton">Left</button>
-    <button id="shootButton">Shoot</button>
-    <button id="rightButton">Right</button>
+    <button id="leftButton">
+      <i class="fa fa-arrow-left" aria-hidden="true"></i></button>
+    <button id="shootButton">
+      <i class="fa-solid fa-crosshairs"></i></button>
+    <button id="rightButton">
+      <i class="fa fa-arrow-right" aria-hidden="true"></i></button>
   </div>
   <script>
     const canvas = document.getElementById('gameCanvas');
