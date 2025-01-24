@@ -17,7 +17,7 @@ const bullet = {
   y: player.y,
   width: 5,
   height: 15,
-  speed: 3,
+  speed: 15, //Increased speed (faster bullet)
   active: false,
   image: new Image(),
 };
