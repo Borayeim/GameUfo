@@ -110,3 +110,43 @@ function gameLoop() {
 
 // Start Game
 gameLoop();
+
+let autoShootInterval;
+
+// Add auto-shoot button behavior
+document.getElementById('shootButton').addEventListener('touchstart', () => {
+  autoShootInterval = setInterval(() => {
+    if (!bullet.active) {
+      bullet.x = player.x + player.width / 2 - bullet.width / 2;
+      bullet.y = player.y;
+      bullet.active = true;
+    }
+  }, 300); // Adjust interval (300ms) for desired shooting frequency
+});
+
+document.getElementById('shootButton').addEventListener('touchend', () => {
+  clearInterval(autoShootInterval);
+});
+
+// Handle auto-shoot for keyboard as well (space key)
+document.addEventListener('keydown', (e) => {
+  if (e.key === ' ') {
+    if (!autoShootInterval) {
+      autoShootInterval = setInterval(() => {
+        if (!bullet.active) {
+          bullet.x = player.x + player.width / 2 - bullet.width / 2;
+          bullet.y = player.y;
+          bullet.active = true;
+        }
+      }, 300);
+    }
+  }
+});
+
+document.addEventListener('keyup', (e) => {
+  if (e.key === ' ') {
+    clearInterval(autoShootInterval);
+    autoShootInterval = null;
+  }
+});
+
