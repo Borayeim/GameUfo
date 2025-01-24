@@ -24,7 +24,7 @@ const bullet = {
 bullet.image.src = 'bullet.png';
 // Enemies
 const enemies = [];
-const numEnemies = 3;
+const numEnemies = 6;
 
 for (let i = 0; i < numEnemies; i++) {
   enemies.push({
@@ -56,7 +56,7 @@ function gameLoop() {
     player.x += player.speed;
 
   // Bullet Movement
-   for (let i = 0; i < bullets.length; i++) {
+   for (let i = 1; i < bullets.length; i++) {
     if (bullets[i].active) {
       bullets[i].y -= bullets[i].speed;
       if (bullets[i].y < 0) {
