@@ -17,7 +17,7 @@ const bullet = {
   y: player.y,
   width: 5,
   height: 15,
-  speed: 30,
+  speed: 3,
   active: false,
   image: new Image(),
 };
@@ -56,7 +56,7 @@ function gameLoop() {
     player.x += player.speed;
 
   // Bullet Movement
-   for (let i = 1; i < bullets.length; i++) {
+   for (let i = 0; i < bullets.length; i++) {
     if (bullets[i].active) {
       bullets[i].y -= bullets[i].speed;
       if (bullets[i].y < 0) {
