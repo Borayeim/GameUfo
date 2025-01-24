@@ -129,8 +129,8 @@
     document.getElementById('leftButton').addEventListener('touchend', () => keys['ArrowLeft'] = false);
     document.getElementById('rightButton').addEventListener('touchstart', () => keys['ArrowRight'] = true);
     document.getElementById('rightButton').addEventListener('touchend', () => keys['ArrowRight'] = false);
-    document.getElementById('shootButton').addEventListener('touchstart', () => keys['auto '] = true);
-    document.getElementById('shootButton').addEventListener('touchend', () => keys['auto '] = false);
+    document.getElementById('shootButton').addEventListener('touchstart', () => keys[' '] = true);
+    document.getElementById('shootButton').addEventListener('touchend', () => keys['​ '] = false);
 
     function gameLoop() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
