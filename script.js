@@ -196,4 +196,50 @@ if (bullet.active) {
     console.log("Bullet reset!"); // Debugging log
   }
 }
+const bullet = {
+  x: 0,
+  y: player.y,
+  width: 5,
+  height: 15,
+  speed: 7,
+  active: false,
+  image: new Image(),
+};
+bullet.image.src = 'bullet.png';
+
+function gameLoop() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Auto-shoot
+  autoShootTimer += 16; // Increment timer
+  if (autoShootTimer >= autoShootInterval && !bullet.active) {
+    console.log("Firing bullet!"); // Debugging
+    bullet.x = player.x + player.width / 2 - bullet.width / 2;
+    bullet.y = player.y;
+    bullet.active = true;
+    autoShootTimer = 0; // Reset timer
+  }
+
+  // Bullet movement
+  if (bullet.active) {
+    bullet.y -= bullet.speed;
+    if (bullet.y < 0) {
+      bullet.active = false;
+      console.log("Bullet reset!"); // Debugging
+    }
+  }
+
+  // Draw player
+  ctx.drawImage(player.image, player.x, player.y, player.width, player.height);
+
+  // Draw bullet
+  if (bullet.active) {
+    ctx.drawImage(bullet.image, bullet.x, bullet.y, bullet.width, bullet.height);
+  }
+
+  requestAnimationFrame(gameLoop);
+}
+
+gameLoop();
+
 
