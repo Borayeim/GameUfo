@@ -111,42 +111,71 @@ function gameLoop() {
 // Start Game
 gameLoop();
 
-let autoShootInterval;
+let autoShootTimer = 0;
+const autoShootInterval = 300; // Interval for auto-shoot in milliseconds
 
-// Add auto-shoot button behavior
-document.getElementById('shootButton').addEventListener('touchstart', () => {
-  autoShootInterval = setInterval(() => {
-    if (!bullet.active) {
-      bullet.x = player.x + player.width / 2 - bullet.width / 2;
-      bullet.y = player.y;
-      bullet.active = true;
-    }
-  }, 300); // Adjust interval (300ms) for desired shooting frequency
-});
+function gameLoop() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-document.getElementById('shootButton').addEventListener('touchend', () => {
-  clearInterval(autoShootInterval);
-});
+  // Move player
+  if (keys['ArrowLeft'] && player.x > 0) player.x -= player.speed;
+  if (keys['ArrowRight'] && player.x < canvas.width - player.width) player.x += player.speed;
 
-// Handle auto-shoot for keyboard as well (space key)
-document.addEventListener('keydown', (e) => {
-  if (e.key === ' ') {
-    if (!autoShootInterval) {
-      autoShootInterval = setInterval(() => {
-        if (!bullet.active) {
-          bullet.x = player.x + player.width / 2 - bullet.width / 2;
-          bullet.y = player.y;
-          bullet.active = true;
-        }
-      }, 300);
-    }
+  // Auto-shoot logic
+  autoShootTimer += 16; // Increment based on ~60fps (16ms per frame)
+  if (autoShootTimer >= autoShootInterval && !bullet.active) {
+    bullet.x = player.x + player.width / 2 - bullet.width / 2;
+    bullet.y = player.y;
+    bullet.active = true;
+    autoShootTimer = 0; // Reset the timer
   }
-});
 
-document.addEventListener('keyup', (e) => {
-  if (e.key === ' ') {
-    clearInterval(autoShootInterval);
-    autoShootInterval = null;
+  // Move bullet
+  if (bullet.active) {
+    bullet.y -= bullet.speed;
+    if (bullet.y < 0) bullet.active = false;
   }
-});
 
+  // Draw player
+  ctx.drawImage(player.image, player.x, player.y, player.width, player.height);
+
+  // Draw bullet
+  if (bullet.active) {
+    ctx.drawImage(bullet.image, bullet.x, bullet.y, bullet.width, bullet.height);
+  }
+
+  // Move and draw enemies
+  enemies.forEach((enemy, index) => {
+    enemy.y += enemy.speed;
+    if (enemy.y > canvas.height) {
+      enemy.y = -50;
+      enemy.x = Math.random() * (canvas.width - enemy.width);
+    }
+
+    // Check collision with bullet
+    if (
+      bullet.active &&
+      bullet.x < enemy.x + enemy.width &&
+      bullet.x + bullet.width > enemy.x &&
+      bullet.y < enemy.y + enemy.height &&
+      bullet.y + bullet.height > enemy.y
+    ) {
+      bullet.active = false;
+      enemy.y = -50;
+      enemy.x = Math.random() * (canvas.width - enemy.width);
+      score++;
+    }
+
+    ctx.drawImage(enemy.image, enemy.x, enemy.y, enemy.width, enemy.height);
+  });
+
+  // Draw score
+  ctx.font = '20px Arial';
+  ctx.fillStyle = 'white';
+  ctx.fillText(`Score: ${score}`, 10, 30);
+
+  // Loop the game
+  requestAnimationFrame(gameLoop);
+}
+
+gameLoop();
