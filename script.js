@@ -111,7 +111,7 @@ function gameLoop() {
 // Start Game
 gameLoop();
 
-let autoShootTimer = 0;
+let autoShootTimer = 2;
 const autoShootInterval = 300; // Interval for auto-shoot in milliseconds
 
 function gameLoop() {
