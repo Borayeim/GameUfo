@@ -25,7 +25,7 @@ bullet.image.src = 'bullet.png';
 speed: 3
 // Enemies
 const enemies = [];
-const numEnemies = 6;
+const numEnemies = 3;
 
 for (let i = 0; i < numEnemies; i++) {
   enemies.push({
