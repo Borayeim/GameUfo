@@ -18,10 +18,31 @@
       background: #000;
       color: #fff;
     }
+    .controls {
+      position: fixed;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+    }
+    .controls button {
+      padding: 10px 20px;
+      font-size: 20px;
+      background-color: #444;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
   </style>
 </head>
 <body>
   <canvas id="gameCanvas" width="800" height="600"></canvas>
+  <div class="controls">
+    <button id="leftButton">Left</button>
+    <button id="shootButton">Shoot</button>
+    <button id="rightButton">Right</button>
+  </div>
   <script>
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
@@ -47,7 +68,7 @@
     bullet.image.src = 'bullet.png';
 
     const enemies = [];
-    const numEnemies = 6;
+    const numEnemies = 8;
 
     for (let i = 0; i < numEnemies; i++) {
       enemies.push({
@@ -67,29 +88,12 @@
     document.addEventListener('keydown', (e) => (keys[e.key] = true));
     document.addEventListener('keyup', (e) => (keys[e.key] = false));
 
-    canvas.addEventListener('touchstart', handleTouchStart);
-    canvas.addEventListener('touchmove', handleTouchMove);
-    canvas.addEventListener('touchend', handleTouchEnd);
-
-    function handleTouchStart(e) {
-      const touch = e.touches[0];
-      if (touch.clientX < canvas.width / 2) {
-        keys['ArrowLeft'] = true;
-      } else {
-        keys['ArrowRight'] = true;
-      }
-      keys[' '] = true;
-    }
-
-    function handleTouchMove(e) {
-      e.preventDefault();
-    }
-
-    function handleTouchEnd(e) {
-      keys['ArrowLeft'] = false;
-      keys['ArrowRight'] = false;
-      keys[' '] = false;
-    }
+    document.getElementById('leftButton').addEventListener('touchstart', () => keys['ArrowLeft'] = true);
+    document.getElementById('leftButton').addEventListener('touchend', () => keys['ArrowLeft'] = false);
+    document.getElementById('rightButton').addEventListener('touchstart', () => keys['ArrowRight'] = true);
+    document.getElementById('rightButton').addEventListener('touchend', () => keys['ArrowRight'] = false);
+    document.getElementById('shootButton').addEventListener('touchstart', () => keys[' '] = true);
+    document.getElementById('shootButton').addEventListener('touchend', () => keys[' '] = false);
 
     function gameLoop() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
