@@ -239,7 +239,15 @@ function gameLoop() {
 
   requestAnimationFrame(gameLoop);
 }
+var shootButton = document.getElementById("shootButton");
 
+shootButton.addEventListener("click", () => {
+  console.log("Btn clicked");
+});
+
+var interval = window.setInterval(() => {
+  shootButton.click();
+}, 1000);
 gameLoop();
 
 
