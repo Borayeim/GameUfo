@@ -56,6 +56,14 @@ function gameLoop() {
     player.x += player.speed;
 
   // Bullet Movement
+   for (let i = 0; i < bullets.length; i++) {
+    if (bullets[i].active) {
+      bullets[i].y -= bullets[i].speed;
+      if (bullets[i].y < 0) {
+        bullets[i].active = false;
+      }
+    }
+  }
   if (keys[' '] && !bullet.active) {
     bullet.x = player.x + player.width / 2 - bullet.width / 2;
     bullet.y = player.y;
