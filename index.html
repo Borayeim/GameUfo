@@ -7,6 +7,31 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <title>UFO 2D Game</title>
   <style>
+     .game-over-container {
+      position: absolute;
+      top: 65%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      font-size: 30px;
+    }
+    .game-over-container button {
+      padding: 10px 20px;
+      font-size: 20px;
+      background-color: #bf1313;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      box-shadow: 0 0 10px #ffffff;
+    }
+    .game-over-container button:hover {
+      background-color: #e90a0a;
+    }
+    #restartButton {
+      font-family: 'Press Start 2P', cursive;
+      font-size: 15px;
+      color: rgb(255, 255, 255);
+    }
     canvas {
       display: block;
       margin: 0 auto;
@@ -183,7 +208,125 @@
 
       requestAnimationFrame(gameLoop);
     }
+     // Game variables
+    let score = 0;
+    let gameOver = false;
+    let keys = {};
 
+    // Event listeners
+    document.addEventListener('keydown', (e) => (keys[e.key] = true));
+    document.addEventListener('keyup', (e) => (keys[e.key] = false));
+
+    // Game loop
+    function gameLoop() {
+      if (gameOver) {
+        displayGameOver();
+        return;
+      }
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Player movement
+      if (keys['ArrowLeft'] && player.x > 0) player.x -= player.speed;
+      if (keys['ArrowRight'] && player.x < canvas.width - player.width)
+        player.x += player.speed;
+
+      // Bullet movement
+      if (keys[' '] && !bullet.active) {
+        bullet.x = player.x + player.width / 2 - bullet.width / 2;
+        bullet.y = player.y;
+        bullet.active = true;
+      }
+      if (bullet.active) {
+        bullet.y -= bullet.speed;
+        if (bullet.y < 0) bullet.active = false;
+      }
+
+      // Draw player
+      ctx.drawImage(player.image, player.x, player.y, player.width, player.height);
+
+      // Draw bullet
+      if (bullet.active)
+        ctx.drawImage(bullet.image, bullet.x, bullet.y, bullet.width, bullet.height);
+
+      // Enemy movement and collision
+      enemies.forEach((enemy) => {
+        enemy.y += enemy.speed;
+
+        if (enemy.y > canvas.height) {
+          enemy.y = -50;
+          enemy.x = Math.random() * (canvas.width - enemy.width);
+        }
+
+        // Check collision with player
+        if (
+          player.x < enemy.x + enemy.width &&
+          player.x + player.width > enemy.x &&
+          player.y < enemy.y + enemy.height &&
+          player.y + player.height > enemy.y
+        ) {
+          gameOver = true;
+        }
+
+        // Check collision with bullet
+        if (
+          bullet.active &&
+          bullet.x < enemy.x + enemy.width &&
+          bullet.x + bullet.width > enemy.x &&
+          bullet.y < enemy.y + enemy.height &&
+          bullet.y + bullet.height > enemy.y
+        ) {
+          bullet.active = false;
+          score++;
+          enemy.y = -50;
+          enemy.x = Math.random() * (canvas.width - enemy.width);
+        }
+
+        // Draw enemy
+        ctx.drawImage(enemy.image, enemy.x, enemy.y, enemy.width, enemy.height);
+      });
+
+      // Draw score
+      ctx.font = '20px Arial';
+      ctx.fillStyle = 'white';
+      ctx.fillText(`Score: ${score}`, 10, 30);
+
+      requestAnimationFrame(gameLoop);
+    }
+
+    // Display Game Over screen with Restart button
+    function displayGameOver() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.font = '30px "Press Start 2P"';
+      ctx.fillStyle = 'red';
+      ctx.textAlign = 'center';
+      ctx.fillText('Game Over', canvas.width / 2, canvas.height / 2);
+      ctx.font = '14px "Press Start 2P"';
+      ctx.fillStyle = 'white';
+      ctx.fillText('Press the button restart', canvas.width / 2, canvas.height / 2 + 40);
+
+      // Show Restart Button
+      document.getElementById('gameOverContainer').style.display = 'block';
+    }
+
+    // Restart game when the button is clicked
+    document.getElementById('restartButton').addEventListener('click', restartGame);
+
+    function restartGame() {
+      gameOver = false;
+      score = 0;
+      player.x = 150;
+      player.y = 500;
+      bullet.active = false;
+      enemies.forEach((enemy) => {
+        enemy.x = Math.random() * (canvas.width - enemy.width);
+        enemy.y = Math.random() * 100;
+      });
+
+      // Hide Restart button and game over screen
+      document.getElementById('gameOverContainer').style.display = 'none';
+      gameLoop();
+    }
     gameLoop();
   </script>
 </body>
