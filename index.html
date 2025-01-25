@@ -4,17 +4,69 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="shortcut icon" type="x-icon" href="logo (2).png">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <title>UFO 2D Game</title>
   <style>
-     .game-over-container {
+    body {
+      text-align: center;
+      font-family: Arial, sans-serif;
+      background: #000;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      max-width: 1440px;
+      margin: 0 auto;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    canvas {
+      display: block;
+      margin: 0 auto;
+      background: url('background.png') no-repeat center center;
+      background-size: cover;
+    }
+
+    .controls {
+      position: fixed;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+    }
+
+    .controls button {
+      padding: 10px 20px;
+      font-size: 20px;
+      background-color: #000000;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      box-shadow: 0 0 50px #d7d9dc;
+    }
+
+    .controls button:hover {
+      background-color: #bf1313;
+      box-shadow: 0 0 50px #8a8789;
+    }
+
+    .fa {
+      font-size: 30px;
+      margin: 0 20px;
+    }
+
+    .game-over-container {
       position: absolute;
-      top: 65%;
+      top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
       text-align: center;
       font-size: 30px;
+      display: none;
     }
+
     .game-over-container button {
       padding: 10px 20px;
       font-size: 20px;
@@ -24,93 +76,30 @@
       cursor: pointer;
       box-shadow: 0 0 10px #ffffff;
     }
+
     .game-over-container button:hover {
       background-color: #e90a0a;
-    }
-    #restartButton {
-      font-family: 'Press Start 2P', cursive;
-      font-size: 15px;
-      color: rgb(255, 255, 255);
-    }
-    canvas {
-      display: block;
-      margin: 0 auto;
-      background: url('background.png') no-repeat center center;
-      display: flex;
-      flex-direction: column;
-      max-width: 1440px;
-      margin:0 auto;
-      height: 100vh;
-      height: -webkit-fill-available;
-    }
-    body {
-      text-align: center;
-      font-family: Arial, sans-serif;
-      background: #000;
-      color: #fff;
-      display: flex;
-      flex-direction: column;
-      max-width: 1440px;
-      margin:0 auto;
-      height: 100vh;
-      height: -webkit-fill-available;
-    }
-    .controls {
-      position: fixed;
-      bottom: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      gap: 10px;
-    }
-    .controls button {
-      padding: 10px 20px;
-      font-size: 20px;
-      background-color: #000000;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      box-shadow:0 0 50px #d7d9dc;
-
-    }
-    #shootButton:hover {
-      background-color: #bf1313;
-      box-shadow:0 0 50px #8a8789;
-    }
-    #leftButton:hover,
-    #rightButton:hover {
-      background-color: #bf1313;
-      box-shadow:0 0 50px #a59fa3;
-    }
-    .fa {
-      font-size: 30px;
-      margin: 0 20px;
-    }
-    .fa-solid {
-      font-size: 30px;
-      margin-right: 1px;
-      width: 30px;
-      height: 30px;
-      padding: 10px;
     }
   </style>
 </head>
 <body>
   <canvas id="gameCanvas" width="400" height="600"></canvas>
+  <div id="gameOverContainer" class="game-over-container">
+    <p>Game Over</p>
+    <button id="restartButton">Restart</button>
+  </div>
   <div class="controls">
-    <button id="leftButton">
-      <i class="fa fa-arrow-left" aria-hidden="true"></i></button>
-    <button id="shootButton">
-      <i class="fa-solid fa-crosshairs"></i></button>
-    <button id="rightButton">
-      <i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+    <button id="leftButton"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
+    <button id="shootButton"><i class="fa-solid fa-crosshairs"></i></button>
+    <button id="rightButton"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
   </div>
   <script>
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
+
     const player = {
-      x: 370,
-      y: 480,
+      x: 175,
+      y: 500,
       width: 50,
       height: 50,
       speed: 5,
@@ -120,7 +109,7 @@
 
     const bullet = {
       x: 0,
-      y: player.y,
+      y: 0,
       width: 5,
       height: 15,
       speed: 7,
@@ -145,79 +134,37 @@
     }
 
     let score = 0;
-    let keys = {};
-
-    document.addEventListener('keydown', (e) => (keys[e.key] = true));
-    document.addEventListener('keyup', (e) => (keys[e.key] = false));
-
-    document.getElementById('leftButton').addEventListener('touchstart', () => keys['ArrowLeft'] = true);
-    document.getElementById('leftButton').addEventListener('touchend', () => keys['ArrowLeft'] = false);
-    document.getElementById('rightButton').addEventListener('touchstart', () => keys['ArrowRight'] = true);
-    document.getElementById('rightButton').addEventListener('touchend', () => keys['ArrowRight'] = false);
-    document.getElementById('shootButton').addEventListener('touchstart', () => keys[' '] = true);
-    document.getElementById('shootButton').addEventListener('touchend', () => keys['​ '] = false);
-
-    function gameLoop() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      if (keys['ArrowLeft'] && player.x > 0) player.x -= player.speed;
-      if (keys['ArrowRight'] && player.x < canvas.width - player.width)
-        player.x += player.speed;
-
-      if (keys[' '] && !bullet.active) {
-        bullet.x = player.x + player.width / 2 - bullet.width / 2;
-        bullet.y = player.y;
-        bullet.active = true;
-      }
-      if (bullet.active) {
-        bullet.y -= bullet.speed;
-        if (bullet.y < 0) bullet.active = false;
-      }
-
-      ctx.drawImage(player.image, player.x, player.y, player.width, player.height);
-
-      if (bullet.active)
-        ctx.drawImage(bullet.image, bullet.x, bullet.y, bullet.width, bullet.height);
-
-      enemies.forEach((enemy, index) => {
-        enemy.y += enemy.speed;
-        if (enemy.y > canvas.height) {
-          enemy.y = -50;
-          enemy.x = Math.random() * (canvas.width - enemy.width);
-        }
-
-        if (
-          bullet.active &&
-          bullet.x < enemy.x + enemy.width &&
-          bullet.x + bullet.width > enemy.x &&
-          bullet.y < enemy.y + enemy.height &&
-          bullet.y + bullet.height > enemy.y
-        ) {
-          bullet.active = false;
-          enemy.y = -50;
-          enemy.x = Math.random() * (canvas.width - enemy.width);
-          score++;
-        }
-
-        ctx.drawImage(enemy.image, enemy.x, enemy.y, enemy.width, enemy.height);
-      });
-
-      ctx.font = '20px Arial';
-      ctx.fillStyle = 'white';
-      ctx.fillText(`Score: ${score}`, 10, 30);
-
-      requestAnimationFrame(gameLoop);
-    }
-     // Game variables
-    let score = 0;
     let gameOver = false;
-    let keys = {};
+    const keys = {};
 
-    // Event listeners
     document.addEventListener('keydown', (e) => (keys[e.key] = true));
     document.addEventListener('keyup', (e) => (keys[e.key] = false));
 
-    // Game loop
+    document.getElementById('leftButton').addEventListener('mousedown', () => (keys['ArrowLeft'] = true));
+    document.getElementById('leftButton').addEventListener('mouseup', () => (keys['ArrowLeft'] = false));
+    document.getElementById('rightButton').addEventListener('mousedown', () => (keys['ArrowRight'] = true));
+    document.getElementById('rightButton').addEventListener('mouseup', () => (keys['ArrowRight'] = false));
+    document.getElementById('shootButton').addEventListener('mousedown', () => (keys[' '] = true));
+    document.getElementById('shootButton').addEventListener('mouseup', () => (keys[' '] = false));
+
+    function restartGame() {
+      gameOver = false;
+      score = 0;
+      player.x = 175;
+      player.y = 500;
+      bullet.active = false;
+      enemies.forEach((enemy) => {
+        enemy.x = Math.random() * (canvas.width - enemy.width);
+        enemy.y = Math.random() * 100;
+      });
+      document.getElementById('gameOverContainer').style.display = 'none';
+      gameLoop();
+    }
+
+    function displayGameOver() {
+      document.getElementById('gameOverContainer').style.display = 'block';
+    }
+
     function gameLoop() {
       if (gameOver) {
         displayGameOver();
@@ -226,39 +173,31 @@
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Player movement
       if (keys['ArrowLeft'] && player.x > 0) player.x -= player.speed;
-      if (keys['ArrowRight'] && player.x < canvas.width - player.width)
-        player.x += player.speed;
+      if (keys['ArrowRight'] && player.x < canvas.width - player.width) player.x += player.speed;
 
-      // Bullet movement
       if (keys[' '] && !bullet.active) {
         bullet.x = player.x + player.width / 2 - bullet.width / 2;
         bullet.y = player.y;
         bullet.active = true;
       }
+
       if (bullet.active) {
         bullet.y -= bullet.speed;
         if (bullet.y < 0) bullet.active = false;
       }
 
-      // Draw player
       ctx.drawImage(player.image, player.x, player.y, player.width, player.height);
 
-      // Draw bullet
-      if (bullet.active)
-        ctx.drawImage(bullet.image, bullet.x, bullet.y, bullet.width, bullet.height);
+      if (bullet.active) ctx.drawImage(bullet.image, bullet.x, bullet.y, bullet.width, bullet.height);
 
-      // Enemy movement and collision
       enemies.forEach((enemy) => {
         enemy.y += enemy.speed;
-
         if (enemy.y > canvas.height) {
           enemy.y = -50;
           enemy.x = Math.random() * (canvas.width - enemy.width);
         }
 
-        // Check collision with player
         if (
           player.x < enemy.x + enemy.width &&
           player.x + player.width > enemy.x &&
@@ -268,7 +207,6 @@
           gameOver = true;
         }
 
-        // Check collision with bullet
         if (
           bullet.active &&
           bullet.x < enemy.x + enemy.width &&
@@ -282,11 +220,9 @@
           enemy.x = Math.random() * (canvas.width - enemy.width);
         }
 
-        // Draw enemy
         ctx.drawImage(enemy.image, enemy.x, enemy.y, enemy.width, enemy.height);
       });
 
-      // Draw score
       ctx.font = '20px Arial';
       ctx.fillStyle = 'white';
       ctx.fillText(`Score: ${score}`, 10, 30);
@@ -294,39 +230,8 @@
       requestAnimationFrame(gameLoop);
     }
 
-    // Display Game Over screen with Restart button
-    function displayGameOver() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.font = '30px "Press Start 2P"';
-      ctx.fillStyle = 'red';
-      ctx.textAlign = 'center';
-      ctx.fillText('Game Over', canvas.width / 2, canvas.height / 2);
-      ctx.font = '14px "Press Start 2P"';
-      ctx.fillStyle = 'white';
-      ctx.fillText('Press the button restart', canvas.width / 2, canvas.height / 2 + 40);
-
-      // Show Restart Button
-      document.getElementById('gameOverContainer').style.display = 'block';
-    }
-
-    // Restart game when the button is clicked
     document.getElementById('restartButton').addEventListener('click', restartGame);
 
-    function restartGame() {
-      gameOver = false;
-      score = 0;
-      player.x = 150;
-      player.y = 500;
-      bullet.active = false;
-      enemies.forEach((enemy) => {
-        enemy.x = Math.random() * (canvas.width - enemy.width);
-        enemy.y = Math.random() * 100;
-      });
-
-      // Hide Restart button and game over screen
-      document.getElementById('gameOverContainer').style.display = 'none';
-      gameLoop();
-    }
     gameLoop();
   </script>
 </body>
