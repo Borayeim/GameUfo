@@ -150,12 +150,12 @@
     document.addEventListener('keydown', (e) => (keys[e.key] = true));
     document.addEventListener('keyup', (e) => (keys[e.key] = false));
 
-    document.getElementById('leftButton').addEventListener('mousedown', () => (keys['ArrowLeft'] = true));
-    document.getElementById('leftButton').addEventListener('mouseup', () => (keys['ArrowLeft'] = false));
-    document.getElementById('rightButton').addEventListener('mousedown', () => (keys['ArrowRight'] = true));
-    document.getElementById('rightButton').addEventListener('mouseup', () => (keys['ArrowRight'] = false));
-    document.getElementById('shootButton').addEventListener('mousedown', () => (keys[' '] = true));
-    document.getElementById('shootButton').addEventListener('mouseup', () => (keys[' '] = false));
+     document.getElementById('leftButton').addEventListener('touchstart', () => keys['ArrowLeft'] = true);
+    document.getElementById('leftButton').addEventListener('touchend', () => keys['ArrowLeft'] = false);
+    document.getElementById('rightButton').addEventListener('touchstart', () => keys['ArrowRight'] = true);
+    document.getElementById('rightButton').addEventListener('touchend', () => keys['ArrowRight'] = false);
+    document.getElementById('shootButton').addEventListener('touchstart', () => keys[' '] = true);
+    document.getElementById('shootButton').addEventListener('touchend', () => keys['​ '] = false);
 
     function restartGame() {
       gameOver = false;
